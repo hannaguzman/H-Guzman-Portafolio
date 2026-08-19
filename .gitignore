@@ -1,0 +1,4 @@
+# Si vas a usar herramientas locales
+node_modules/
+.DS_Store
+.vscode/
