@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Hanna Guzman — Portfolio</title>
+  <!-- Roboto Condensed -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="page">
+    <header class="hero" role="banner">
+      <div>
+        <h1 class="name">Hanna Guzman</h1>
+        <p class="role">QA Tester</p>
+      </div>
+      <div class="hero-actions">
+        <button id="copyEmailBtn" aria-describedby="copyStatus">Copiar email</button>
+        <a class="linkedin" href="https://ar.linkedin.com/in/hannaguzm%C3%A1n" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+    </header>
+
+    <main>
+      <section class="card contact" aria-labelledby="contactTitle">
+        <h2 id="contactTitle">Contacto</h2>
+        <dl>
+          <dt>Email</dt>
+          <dd><a href="mailto:hannaguzman611@gmail.com">hannaguzman611@gmail.com</a></dd>
+          <dt>Teléfono</dt>
+          <dd><a href="tel:+541171215522">1171215522</a></dd>
+          <dt>LinkedIn</dt>
+          <dd><a href="https://ar.linkedin.com/in/hannaguzm%C3%A1n" target="_blank" rel="noopener">linkedin.com/in/hannaguzmán</a></dd>
+        </dl>
+        <div id="copyStatus" class="visually-hidden" aria-live="polite"></div>
+      </section>
+
+      <section class="card skills" aria-labelledby="skillsTitle">
+        <h2 id="skillsTitle">Conocimientos</h2>
+        <ul>
+          <li>Testing manual</li>
+          <li>Testing automatizado</li>
+          <li>Metodologías ágiles / Scrum</li>
+          <li>JavaScript (JS)</li>
+          <li>SQL</li>
+        </ul>
+      </section>
+
+      <section class="card projects" aria-labelledby="projectsTitle">
+        <h2 id="projectsTitle">Proyectos</h2>
+        <p>Sección de proyectos (vacía por ahora). Aquí se mostrarán enlaces y descripciones cuando estén disponibles.</p>
+      </section>
+    </main>
+
+    <footer class="site-footer" role="contentinfo">
+      <p>© <span id="year"></span> Hanna Guzman — QA Tester</p>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
