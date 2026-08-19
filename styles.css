@@ -1,13 +1,16 @@
 :root{
-  --bg: #ffa0a0; /* sitio fondo pedido */
-  --text: #ffffff; /* letras blancas */
-  --muted: rgba(255,255,255,0.9);
+  --bg: #FAF7EF;       /* blanco hueso de fondo */
+  --salmon-1: #FCE7E6; /* rosa muy suave para gradiente */
+  --salmon-2: #F7B7B7; /* acentos */
+  --card-bg: #FFFFFF;  /* tarjetas blancas */
+  --text-dark: #2E2E2E; /* texto principal oscuro */
+  --muted: rgba(46,46,46,0.6);
   --radius: 12px;
   font-family: 'Roboto Condensed', Arial, sans-serif;
 }
 
 *{box-sizing:border-box}
-html,body{height:100%;margin:0;background:var(--bg);color:var(--text)}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--text-dark)}
 a{color:inherit}
 .page{max-width:900px;margin:0 auto;padding:1rem}
 
@@ -17,26 +20,27 @@ a{color:inherit}
 /* Hero */
 .hero{
   display:flex;flex-direction:column;gap:.75rem;
-  background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
-  padding:1rem;border-radius:var(--radius);margin-bottom:1rem;
+  background: linear-gradient(180deg, rgba(247,183,183,0.35), rgba(255,255,255,1));
+  padding:1.25rem;border-radius:var(--radius);margin-bottom:1rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.04);
 }
-.name{font-size:1.5rem;margin:0; text-decoration: underline; text-decoration-color: var(--text); text-decoration-thickness: 2px}
+.name{font-size:1.6rem;margin:0;color:var(--text-dark);font-weight:700}
 .role{margin:.25rem 0 0;color:var(--muted)}
 
 /* Hero actions */
 .hero-actions{display:flex;gap:.5rem;align-items:center}
 button, .linkedin{
-  background: rgba(255,255,255,0.12);border:none;color:var(--text);padding:.5rem .7rem;border-radius:8px;text-decoration:none;cursor:pointer;font-weight:700
+  background: var(--salmon-2);border:none;color:white;padding:.5rem .8rem;border-radius:8px;text-decoration:none;cursor:pointer;font-weight:700
 }
-button:focus, .linkedin:focus{outline:3px solid rgba(255,255,255,0.25);outline-offset:2px}
+button:focus, .linkedin:focus{outline:3px solid rgba(247,183,183,.45);outline-offset:2px}
 
 /* Cards */
-.card{background: rgba(255,255,255,0.06);border-radius:10px;padding:0.9rem;margin-bottom:1rem;box-shadow:0 1px 4px rgba(0,0,0,.04)}
-.card h2{margin-top:0;color:var(--text)}
+.card{background: var(--card-bg);border-radius:10px;padding:1rem;margin-bottom:1rem;box-shadow:0 2px 6px rgba(0,0,0,.06)}
+.card h2{margin-top:0;color:var(--salmon-2);font-size:1.4rem}
 dl{margin:0}
 dl dt{font-weight:700}
-dl dd{margin:0 0 .5rem 0;color:var(--muted)}
-ul{padding-left:1.2rem;margin:.2rem 0;color:var(--muted)}
+dl dd{margin:0 0 .5rem 0;color:var(--text-dark)}
+ul{padding-left:1.2rem;margin:.2rem 0;color:var(--text-dark)}
 
 /* Footer */
 .site-footer{text-align:center;color:var(--muted);padding:1rem 0;font-size:.9rem}
