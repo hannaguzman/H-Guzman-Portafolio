@@ -2,93 +2,165 @@
 <html lang="es">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Hanna Guzman — Portfolio</title>
-  <!-- Roboto Condensed -->
-  <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400;700&display=swap" rel="stylesheet">
-  <!-- Cache-bust param para forzar recarga en navegadores -->
-  <link rel="stylesheet" href="styles.css?v=3">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Hanna Guzmán — QA Tester</title>
+  <meta name="description" content="Hanna Guzmán, QA Tester. Testing manual y automatizado, JavaScript, SQL y metodologías ágiles. Mirá mis proyectos y contactame." />
+  <meta name="theme-color" content="#FF85B3" />
+  <meta property="og:title" content="Hanna Guzmán — QA Tester" />
+  <meta property="og:description" content="Testing manual y automatizado, JavaScript, SQL y Scrum. Proyectos, formación y contacto." />
+  <meta property="og:type" content="website" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=4">
+  <noscript><style>#intro,#coral{display:none}body.intro-activo{overflow:auto;height:auto}.reveal{opacity:1!important;transform:none!important}</style></noscript>
 </head>
-<body>
-  <div class="page">
-    <header class="hero" role="banner">
-      <div>
-        <h1 class="name">Hanna Guzman</h1>
-        <p class="role">QA Tester</p>
-      </div>
-      <div class="hero-actions">
-        <button id="copyEmailBtn" aria-describedby="copyStatus">Copiar email</button>
-        <a class="linkedin" href="https://ar.linkedin.com/in/hannaguzm%C3%A1n" target="_blank" rel="noopener">LinkedIn</a>
-      </div>
+<body class="intro-activo">
+
+  <!-- ============ ENTRADA ANIMADA ============ -->
+  <div id="coral"></div>
+  <div id="intro">
+    <p class="sr">Hanna Guzmán</p>
+    <div id="sombra"></div>
+    <div class="onda"></div><div class="onda"></div><div class="onda"></div>
+    <div class="onda"></div><div class="onda"></div><div class="onda"></div>
+    <canvas id="gl"></canvas>
+    <div class="nom" id="nomFondo" aria-hidden="true"></div>
+    <div class="nom" id="nomFrente" aria-hidden="true"></div>
+    <button id="saltar" type="button">Saltar</button>
+  </div>
+
+  <!-- ============ SITIO ============ -->
+  <div id="sitio">
+    <div class="bg" aria-hidden="true">
+      <i class="blob b1"></i><i class="blob b2"></i><i class="blob b3"></i><i class="blob b4"></i>
+    </div>
+
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+    <header class="nav" id="nav">
+      <a class="logo" href="#inicio" aria-label="Hanna Guzmán, inicio"><span class="logo-mark">HG</span><span class="logo-text">Hanna Guzmán</span></a>
+      <nav class="nav-links" aria-label="Secciones">
+        <a href="#proyectos">Proyectos</a>
+        <a href="#conocimientos">Conocimientos</a>
+        <a href="#educacion">Educación</a>
+        <a href="#contacto" class="nav-cta">Contacto</a>
+      </nav>
     </header>
 
-    <main>
-      <section class="card contact" aria-labelledby="contactTitle">
-        <h2 id="contactTitle">Contacto</h2>
-        <dl>
-          <dt>Email</dt>
-          <dd><a href="mailto:hannaguzman611@gmail.com">hannaguzman611@gmail.com</a></dd>
-          <dt>Teléfono</dt>
-          <dd><a href="tel:+541171215522">1171215522</a></dd>
-          <dt>LinkedIn</dt>
-          <dd><a href="https://ar.linkedin.com/in/hannaguzm%C3%A1n" target="_blank" rel="noopener">linkedin.com/in/hannaguzmán</a></dd>
-        </dl>
-        <div id="copyStatus" class="visually-hidden" aria-live="polite"></div>
-      </section>
+    <main id="contenido">
 
-      <section class="card skills" aria-labelledby="skillsTitle">
-        <h2 id="skillsTitle">Conocimientos</h2>
-        <ul>
-          <li>Testing manual</li>
-          <li>Testing automatizado</li>
-          <li>Metodologías ágiles / Scrum</li>
-          <li>JavaScript (JS)</li>
-          <li>SQL</li>
-        </ul>
-      </section>
-
-      <section class="card education" aria-labelledby="educationTitle">
-        <h2 id="educationTitle">Educación</h2>
-        <ul>
-          <li>QA Tester - UTN</li>
-          <li>Competencias Laborales - Fundación Empujar</li>
-          <li>JavaScript - freeCodeCamp</li>
-          <li>Inglés B1 - freeCodeCamp</li>
-        </ul>
-      </section>
-
-      <section class="card projects" aria-labelledby="projectsTitle">
-        <h2 id="projectsTitle">Proyectos</h2>
-        <p>Sección de proyectos. Aquí se mostrarán enlaces y descripciones cuando estén disponibles.</p>
-
-        <article class="card project-item" aria-labelledby="proj-aplicacion">
-          <h3 id="proj-aplicacion">Aplicación - Tickets de cine</h3>
-          <p class="project-desc">App de reservas de entradas de cine</p>
-          <p class="project-status"><strong>Estado:</strong> Terminada </p>
-
-          <div class="project-links">
-            <a class="project-link" href="https://aplicacion-ticket-cine.vercel.app/" target="_blank" rel="noopener noreferrer">Ver demo</a>
-            <a class="project-link secondary" href="https://github.com/hannaguzman/Aplicacion-TicketCine" target="_blank" rel="noopener noreferrer">Ver repo</a>
+      <!-- HERO -->
+      <section class="hero" id="inicio" aria-labelledby="titulo">
+        <div class="hero-copy">
+          <p class="badge reveal"><span class="pulse" aria-hidden="true"></span>Disponible para entrevistas</p>
+          <p class="eyebrow reveal">Hanna Guzmán · QA Tester</p>
+          <h1 id="titulo" class="reveal">Encuentro los errores <span class="hl">antes</span> que tus usuarios.</h1>
+          <p class="lead reveal">Me formé como QA Tester en la UTN. Practico testing manual y automatizado, con JavaScript y SQL, y conozco las metodologías ágiles y Scrum. Además construyo y publico mis propias apps para entender un producto de punta a punta.</p>
+          <div class="hero-actions reveal">
+            <a class="btn btn-primary" href="mailto:hannaguzman611@gmail.com">Hablemos</a>
+            <a class="btn btn-ghost" href="#proyectos">Ver proyectos</a>
+            <a class="btn btn-ghost" href="https://ar.linkedin.com/in/hannaguzm%C3%A1n" target="_blank" rel="noopener">LinkedIn</a>
           </div>
-        </article>
+        </div>
 
-        <article class="card project-item" aria-labelledby="proj-postulaciones">
-          <h3 id="proj-postulaciones">Applica</h3>
-          <p class="project-desc">Organizador de tus postulaciones de trabajo.</p>
-          <p class="project-status"><strong>Estado:</strong> En progreso</p>
+        <aside class="hero-card reveal" aria-label="Ilustración: lista de verificación de QA">
+          <div class="hc-top"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><b>test-run</b></div>
+          <ul class="checks">
+            <li style="--d:0">Casos de prueba</li>
+            <li style="--d:1">Reporte de bugs</li>
+            <li style="--d:2">Pruebas de regresión</li>
+            <li style="--d:3">Automatización</li>
+          </ul>
+          <div class="hc-foot"><span class="bar"><i></i></span><b>Listo para producción</b></div>
+        </aside>
+      </section>
 
-          <div class="project-links">
-            <a class="project-link" href="https://aplica-one.vercel.app/" target="_blank" rel="noopener noreferrer">Ver demo</a>
+      <!-- PROYECTOS -->
+      <section class="section" id="proyectos" aria-labelledby="t-proyectos">
+        <div class="section-head reveal"><p class="eyebrow">01 — Trabajo</p><h2 id="t-proyectos">Proyectos</h2></div>
+
+        <div class="grid-2">
+          <article class="card project reveal">
+            <div class="project-top"><span class="num">01</span><span class="status done"><i></i>Terminada</span></div>
+            <h3>Tickets de cine</h3>
+            <p>App de reservas de entradas de cine.</p>
+            <div class="project-links">
+              <a class="btn btn-primary" href="https://aplicacion-ticket-cine.vercel.app/" target="_blank" rel="noopener noreferrer">Ver demo<span class="sr"> de Tickets de cine</span></a>
+              <a class="btn btn-ghost" href="https://github.com/hannaguzman/Aplicacion-TicketCine" target="_blank" rel="noopener noreferrer">Ver repo<span class="sr"> de Tickets de cine</span></a>
+            </div>
+          </article>
+
+          <article class="card project reveal">
+            <div class="project-top"><span class="num">02</span><span class="status wip"><i></i>En progreso</span></div>
+            <h3>Applica</h3>
+            <p>Organizador de tus postulaciones de trabajo.</p>
+            <div class="project-links">
+              <a class="btn btn-primary" href="https://aplica-one.vercel.app/" target="_blank" rel="noopener noreferrer">Ver demo<span class="sr"> de Applica</span></a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- CONOCIMIENTOS -->
+      <section class="section" id="conocimientos" aria-labelledby="t-conocimientos">
+        <div class="section-head reveal"><p class="eyebrow">02 — Herramientas</p><h2 id="t-conocimientos">Conocimientos</h2></div>
+
+        <div class="grid-3">
+          <div class="card skill reveal">
+            <h3>Testing</h3>
+            <ul class="chips"><li>Testing manual</li><li>Testing automatizado</li></ul>
           </div>
-        </article>
+          <div class="card skill reveal">
+            <h3>Metodología</h3>
+            <ul class="chips"><li>Metodologías ágiles</li><li>Scrum</li></ul>
+          </div>
+          <div class="card skill reveal">
+            <h3>Técnico</h3>
+            <ul class="chips"><li>JavaScript</li><li>SQL</li></ul>
+          </div>
+        </div>
+      </section>
 
+      <!-- EDUCACIÓN -->
+      <section class="section" id="educacion" aria-labelledby="t-educacion">
+        <div class="section-head reveal"><p class="eyebrow">03 — Formación</p><h2 id="t-educacion">Educación</h2></div>
+
+        <ol class="timeline">
+          <li class="reveal"><b>QA Tester</b><span>UTN</span></li>
+          <li class="reveal"><b>Competencias Laborales</b><span>Fundación Empujar</span></li>
+          <li class="reveal"><b>JavaScript</b><span>freeCodeCamp</span></li>
+          <li class="reveal"><b>Inglés B1</b><span>freeCodeCamp</span></li>
+        </ol>
+      </section>
+
+      <!-- CONTACTO -->
+      <section class="section" id="contacto" aria-labelledby="t-contacto">
+        <div class="contact reveal">
+          <p class="eyebrow light">04 — Contacto</p>
+          <h2 id="t-contacto">¿Armamos una entrevista?</h2>
+          <p class="contact-lead">Escribime y te respondo a la brevedad. Estoy lista para sumarme a un equipo de QA.</p>
+
+          <div class="contact-actions">
+            <a class="btn btn-light" href="mailto:hannaguzman611@gmail.com">hannaguzman611@gmail.com</a>
+            <button class="btn btn-outline" id="copyEmailBtn" type="button" aria-describedby="copyStatus">Copiar email</button>
+          </div>
+
+          <dl class="contact-list">
+            <div><dt>Teléfono</dt><dd><a href="tel:+541171215522">11 7121-5522</a></dd></div>
+            <div><dt>LinkedIn</dt><dd><a href="https://ar.linkedin.com/in/hannaguzm%C3%A1n" target="_blank" rel="noopener">linkedin.com/in/hannaguzmán</a></dd></div>
+          </dl>
+          <div id="copyStatus" class="sr" aria-live="polite"></div>
+        </div>
       </section>
     </main>
 
-    <footer class="site-footer" role="contentinfo">
-      <p>© <span id="year"></span> Hanna Guzman — QA Tester</p>
+    <footer class="site-footer">
+      <p>© <span id="year"></span> Hanna Guzmán — QA Tester</p>
     </footer>
   </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script src="script.js"></script>
 </body>
