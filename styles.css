@@ -323,8 +323,15 @@ body.listo .bar i{animation:llena 1.4s cubic-bezier(.2,.8,.2,1) 2.3s forwards}
 .timeline{position:relative;display:grid;gap:14px;padding-left:34px}
 .timeline::before{content:"";position:absolute;left:11px;top:14px;bottom:14px;width:3px;border-radius:3px;background:linear-gradient(var(--rosa),var(--violet),var(--coral))}
 [data-theme="dark"] .timeline::before{background:linear-gradient(var(--cyan),var(--violet),var(--rosa));box-shadow:0 0 12px var(--violet)}
-.timeline li{position:relative;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;
-  background:var(--card-bg);border:1px solid var(--card-bd);border-radius:18px;padding:18px 22px;box-shadow:var(--card-sh);transition:background .5s}
+.timeline li{position:relative}
+.cert{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;text-decoration:none;color:inherit;cursor:pointer;
+  background:var(--card-bg);border:1px solid var(--card-bd);border-radius:18px;padding:18px 22px;box-shadow:var(--card-sh);
+  transition:transform .3s cubic-bezier(.2,.8,.2,1),box-shadow .3s,border-color .3s,background .5s}
+.cert .org::after{content:"↗";display:inline-block;margin-left:10px;opacity:.45;transition:transform .3s,opacity .3s}
+.cert:hover,.cert:focus-visible{transform:translateY(5px);border-color:var(--violet);box-shadow:0 0 0 1px var(--violet),0 12px 30px rgba(123,77,255,.22)}
+[data-theme="dark"] .cert:hover,[data-theme="dark"] .cert:focus-visible{border-color:var(--cyan);box-shadow:0 0 0 1px rgba(0,240,255,.5),0 0 26px rgba(0,240,255,.3),0 0 50px rgba(255,92,203,.15);background:rgba(24,14,56,.72)}
+.cert:hover .org::after,.cert:focus-visible .org::after{opacity:1;transform:translate(3px,-3px)}
+.cert:hover .org,.cert:focus-visible .org{color:var(--ink)}
 .timeline li::before{content:"";position:absolute;left:-30px;top:50%;width:14px;height:14px;margin-top:-7px;border-radius:50%;background:var(--bg);border:3px solid var(--coral)}
 [data-theme="dark"] .timeline li::before{border-color:var(--cyan);box-shadow:0 0 10px var(--cyan)}
 .timeline b{font-size:1.15rem;font-weight:700}
@@ -389,6 +396,7 @@ body.listo .bar i{animation:llena 1.4s cubic-bezier(.2,.8,.2,1) 2.3s forwards}
   html{scroll-behavior:auto}
   .blob,.hero-card,.pulse::after,.floor,.orbit,.brand-text,.brand::before,.brand::after,.cf-star,.detalle-item.card{animation:none}
   .cf-card{transition:none}
+  .cert:hover,.cert:focus-visible{transform:none}
   .reveal{opacity:1;transform:none;transition:none}
   .checks li{opacity:1;transform:none}
   .bar i{width:100%}
