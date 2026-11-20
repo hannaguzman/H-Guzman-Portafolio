@@ -22,13 +22,10 @@ ul,ol{list-style:none}
 /* =====================  ENTRADA  ===================== */
 #coral,#intro{position:fixed;inset:0;transition:transform .9s cubic-bezier(.76,0,.24,1)}
 #coral{background:var(--coral);z-index:199;transition-delay:.12s}
-#intro{background:var(--rosa);z-index:200;overflow:hidden}
+#intro{background:#04030a;z-index:200;overflow:hidden}
 #intro.salir,#coral.salir{transform:translateY(-101%)}
 #intro.fundido{transition:opacity .45s ease;opacity:0}
 #gl{position:absolute;inset:0;width:100%;height:100%;display:block}
-#sombra{position:absolute;left:0;top:0;border-radius:50%;pointer-events:none;opacity:0;
-  background:radial-gradient(closest-side,rgba(130,10,66,.42),rgba(130,10,66,0))}
-.onda{position:absolute;left:0;top:0;border-radius:50%;pointer-events:none;opacity:0;border:2.5px solid rgba(255,255,255,.95)}
 .nom{position:absolute;left:0;right:0;display:flex;justify-content:center;white-space:nowrap;
   font-family:var(--font);font-weight:800;line-height:1.1;letter-spacing:-.005em;pointer-events:none;user-select:none}
 .nom .l{display:inline-block;opacity:0;will-change:transform,opacity}
