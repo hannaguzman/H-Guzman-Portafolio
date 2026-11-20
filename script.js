@@ -15,13 +15,13 @@ const CFG = {
 };
 // Colores de la estrella según cuánto bajó (0 = arriba, 1 = al caer): azul → amarillo → rosa
 const COLORES = [
-  [0,   [91,157,255]],    // azul
-  [.12, [91,157,255]],    // se queda azul un momento arriba
-  [.30, [214,234,255]],   // destello celeste
-  [.40, [255,248,230]],   // blanco cálido
-  [.52, [255,214,107]],   // amarillo dorado
-  [.76, [255,172,130]],   // durazno
-  [1,   [255,133,179]]    // rosa (al tocar)
+  [0,   [91,157,255]],
+  [.12, [91,157,255]],
+  [.30, [214,234,255]],
+  [.40, [255,248,230]],
+  [.52, [255,214,107]],
+  [.76, [255,172,130]],
+  [1,   [255,133,179]]
 ];
 // Tiempos en segundos
 const T = { caida:.3, impacto:1.85, letras:2.2, paso:.065, sub:2.85, inundar:2.95, dur:.95 };
@@ -58,7 +58,7 @@ function buildLetters(el,texto){
   const arr=[];
   for(const ch of texto){
     const s=document.createElement('span'); s.className='l'+(ch===' '?' sp':'');
-    s.textContent = ch===' ' ? ' ' : ch; el.appendChild(s); arr.push({el:s,sp:ch===' ',cx:0,cy:0});
+    s.textContent = ch===' ' ? ' ' : ch; el.appendChild(s); arr.push({el:s,sp:ch===' ',cx:0,cy:0});
   }
   return arr;
 }
@@ -87,7 +87,7 @@ function layout(){
 
 /* ------------------------------------------------------------------ posición de la estrella en la caída */
 function pos(tt){
-  const u=clamp((tt-T.caida)/(T.impacto-T.caida)), e=Math.pow(u,1.7);     // cae acelerando
+  const u=clamp((tt-T.caida)/(T.impacto-T.caida)), e=Math.pow(u,1.7);
   return {u, e, x:L.cx+L.drift*Math.pow(1-u,1.4), y:lerp(L.y0,L.yc,e), sc:lerp(.85,1,e), rot:-(1-u)*Math.PI*.55};
 }
 
@@ -97,7 +97,7 @@ function drawStar(x,y,R,rot,s,rgb,glow,p){
   const q=1-p, base=mixRGB(rgb,WHITE,p);
   const luz=mixRGB(base,WHITE,.5*q), sombra=mixRGB(base,[60,20,40],.18+.14*q);
   c.save(); c.translate(x,y);
-  if(glow>0){                                   // halo luminoso
+  if(glow>0){
     c.globalCompositeOperation='lighter';
     const h=c.createRadialGradient(0,0,R*.2,0,0,R*2.6);
     h.addColorStop(0,rgba(rgb,.42*glow)); h.addColorStop(1,rgba(rgb,0));
@@ -109,7 +109,6 @@ function drawStar(x,y,R,rot,s,rgb,glow,p){
   c.beginPath(); P.forEach((pt,i)=>i?c.lineTo(pt[0],pt[1]):c.moveTo(pt[0],pt[1])); c.closePath();
   if(glow>0){ c.shadowColor=rgba(rgb,.85*glow); c.shadowBlur=R*.6*L.dpr; }
   c.fillStyle=rgba(base); c.fill(); c.shadowBlur=0; c.shadowColor='transparent';
-  // 10 facetas triangulares: cada una con su luz (luz desde arriba a la izquierda)
   c.lineJoin='round'; c.lineWidth=.7;
   for(let i=0;i<10;i+=2){
     const tip=P[i], a=P[(i+9)%10], b=P[(i+1)%10];
@@ -122,7 +121,7 @@ function drawStar(x,y,R,rot,s,rgb,glow,p){
     });
   }
   c.restore();
-  if(glow>0){                                   // destello fino en cruz
+  if(glow>0){
     c.save(); c.translate(x,y); c.globalCompositeOperation='lighter';
     const fa=.3*Math.min(glow,1.3), sz=R*2.5*s;
     c.save(); c.scale(1,.035); let g=c.createRadialGradient(0,0,0,0,0,sz); g.addColorStop(0,`rgba(255,255,255,${fa})`); g.addColorStop(1,'rgba(255,255,255,0)'); c.fillStyle=g; c.beginPath(); c.arc(0,0,sz,0,7); c.fill(); c.restore();
@@ -138,7 +137,6 @@ function render(t){
   const {vw,vh,dpr,R,cx,yc}=L;
   c.setTransform(dpr,0,0,dpr,0,0);
 
-  // noche
   const g=c.createRadialGradient(vw/2,vh*.4,0,vw/2,vh*.4,Math.max(vw,vh)*.8);
   g.addColorStop(0,'#12102a'); g.addColorStop(1,'#04030a');
   c.fillStyle=g; c.fillRect(0,0,vw,vh);
@@ -150,9 +148,8 @@ function render(t){
   }
   c.globalAlpha=1;
 
-  const hv=t-T.impacto;                          // tiempo desde el impacto
+  const hv=t-T.impacto;
 
-  // destello suave y ondas finas
   if(hv>0){
     const fv=clamp(hv/1.1), fe=1-Math.pow(1-fv,3);
     if(fv<1){
@@ -167,24 +164,22 @@ function render(t){
       if(v<=0||v>=1) continue;
       const e=1-Math.pow(1-v,3), r=lerp(R*.8,L.maxR,e), a=Math.pow(1-v,1.6);
       c.beginPath(); c.arc(cx,yc,r,0,7);
-      c.lineWidth=lerp(14,6,v); c.strokeStyle=rgba(CFG.rosa,a*.05); c.stroke();          // halo difuso
-      c.lineWidth=lerp(1.6,.7,v); c.strokeStyle=rgba(mixRGB(CFG.rosa,WHITE,.35),a*.6); c.stroke();   // línea fina
+      c.lineWidth=lerp(14,6,v); c.strokeStyle=rgba(CFG.rosa,a*.05); c.stroke();
+      c.lineWidth=lerp(1.6,.7,v); c.strokeStyle=rgba(mixRGB(CFG.rosa,WHITE,.35),a*.6); c.stroke();
     }
   }
 
-  // inundación rosa desde el punto de impacto
   const fl=clamp((t-T.inundar)/T.dur), rr=fl>=1?1e5:easeIO(fl)*L.floodR;
   if(fl>0){
     c.fillStyle=rgba(CFG.rosa); c.beginPath();
     if(fl>=1) c.rect(0,0,vw,vh); else c.arc(cx,yc,rr,0,7);
     c.fill();
-    const vg=c.createRadialGradient(cx,yc,0,cx,yc,Math.max(vw,vh)*.75);   // luz suave al centro
+    const vg=c.createRadialGradient(cx,yc,0,cx,yc,Math.max(vw,vh)*.75);
     vg.addColorStop(0,`rgba(255,255,255,${.2*easeIO(fl)})`); vg.addColorStop(1,'rgba(255,255,255,0)');
     c.fillStyle=vg; c.fill();
   }
   intro.classList.toggle('sobre-rosa', fl>.55);
 
-  // estela fina detrás de la estrella
   const trailOn=1-smooth(T.impacto,T.impacto+.12,t);
   if(trailOn>0 && t>T.caida){
     c.globalCompositeOperation='lighter'; c.lineCap='round';
@@ -200,14 +195,12 @@ function render(t){
     c.globalCompositeOperation='source-over';
   }
 
-  // la estrella
   const ps=pos(t), col=colorAt(ps.e);
   const pulso=(hv>0&&hv<.5)?1+.06*Math.sin(Math.PI*hv/.5):1;
-  const p=smooth(T.inundar+.2,T.inundar+.8,t);           // al inundarse se vuelve blanca
+  const p=smooth(T.inundar+.2,T.inundar+.8,t);
   const glow=(1-p)*(1+(hv>0?.8*Math.max(0,1-hv/.7):0));
   drawStar(ps.x,ps.y,R,ps.rot,ps.sc*pulso,col,glow,p);
 
-  // letras (blancas sobre la noche; se vuelven oscuras cuando el rosa las alcanza)
   const writ=(arr,t0,paso,alfa)=>{
     let n=0;
     arr.forEach(o=>{
@@ -254,13 +247,7 @@ function play(){
 }
 async function boot(){
   try{ await Promise.race([Promise.all([document.fonts.load('300 40px Outfit'),document.fonts.load('400 20px Outfit')]), new Promise(r=>setTimeout(r,1200))]); }catch(e){}
-  let visto=false;                               // no repetir en la misma pestaña (usar ?intro para verla de nuevo)
-  try{ visto=sessionStorage.getItem('hg-intro')==='1' && !/[?&]intro/.test(location.search); }catch(e){}
-  if(visto && !window.__introManual){
-    intro.remove(); coral.remove(); document.body.classList.remove('intro-activo'); document.body.classList.add('listo');
-    dispatchEvent(new Event('intro:listo')); return;
-  }
-  try{ sessionStorage.setItem('hg-intro','1'); }catch(e){}
+  // La animación se muestra SIEMPRE, en cada carga o recarga de la página.
   try{ sitio.inert=true; }catch(e){}
   layout();
   addEventListener('resize',layout);
@@ -301,7 +288,7 @@ boot();
   const onScroll = () => nav.classList.toggle('scrolled', scrollY > 10);
   addEventListener('scroll', onScroll, { passive: true }); onScroll();
 
-  const links = [...document.querySelectorAll('.nav-links a:not(.nav-cta)')];
+  const links = [...document.querySelectorAll('.nav-links a')];
   if ('IntersectionObserver' in window) {
     const secs = links.map(a => $(a.getAttribute('href'))).filter(Boolean);
     const spy = new IntersectionObserver(es => {
@@ -331,4 +318,81 @@ boot();
     const s = $('#saltar');
     if (document.getElementById('intro') && !document.body.classList.contains('listo')) s && s.click();
   }, 12000);
+})();
+
+// Modo claro / oscuro (sol y luna)
+(() => {
+  'use strict';
+  const root = document.documentElement, btn = document.getElementById('themeBtn');
+  const meta = document.querySelector('meta[name="theme-color"]');
+  const aplicar = (modo, guardar) => {
+    root.dataset.theme = modo;
+    btn.setAttribute('aria-pressed', String(modo === 'dark'));
+    btn.setAttribute('aria-label', modo === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro');
+    if (meta) meta.setAttribute('content', modo === 'dark' ? '#06040f' : '#FF85B3');
+    if (guardar) { try { localStorage.setItem('hg-theme', modo); } catch (e) {} }
+    dispatchEvent(new Event('themechange'));
+  };
+  aplicar(root.dataset.theme === 'dark' ? 'dark' : 'light', false);
+  btn.addEventListener('click', () => aplicar(root.dataset.theme === 'dark' ? 'light' : 'dark', true));
+})();
+
+// Cielo de estrellas del fondo (se adapta al tema, con estrellas fugaces en modo oscuro)
+(() => {
+  'use strict';
+  const cv = document.getElementById('stars'); if (!cv) return;
+  const x = cv.getContext('2d'), root = document.documentElement;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let W, H, dpr, stars = [], shoots = [], mx = 0, my = 0, tmx = 0, tmy = 0;
+
+  function resize() {
+    dpr = Math.min(devicePixelRatio || 1, 2); W = innerWidth; H = innerHeight;
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+    const n = Math.min(Math.round(W * H / 9000), 220);
+    stars = Array.from({ length: n }, () => ({
+      x: Math.random(), y: Math.random(), r: .4 + Math.random() * 1.4, z: .2 + Math.random() * .8,
+      v: .5 + Math.random() * 2, p: Math.random() * 6.28, h: Math.random()
+    }));
+    if (reduce) frame(0);
+  }
+
+  function frame(ms) {
+    const dark = root.dataset.theme === 'dark', t = ms / 1000;
+    mx += (tmx - mx) * .05; my += (tmy - my) * .05;
+    x.setTransform(dpr, 0, 0, dpr, 0, 0); x.clearRect(0, 0, W, H);
+    for (const s of stars) {
+      const px = s.x * W + mx * s.z * 16, py = s.y * H + my * s.z * 16;
+      const tw = .5 + .5 * Math.sin(t * s.v + s.p);
+      let rgb;
+      if (dark) rgb = s.h < .33 ? '0,240,255' : s.h < .66 ? '255,92,203' : '215,200,255';
+      else rgb = s.h < .5 ? '238,99,70' : '123,77,255';
+      const a = (dark ? .35 + .65 * tw : .16 + .3 * tw);
+      x.fillStyle = `rgba(${rgb},${a.toFixed(3)})`;
+      x.beginPath(); x.arc(px, py, s.r, 0, 6.283); x.fill();
+      if (s.r > 1.45) {                           // destello en cruz para las más grandes
+        x.strokeStyle = `rgba(${rgb},${(a * .8).toFixed(3)})`; x.lineWidth = .8;
+        const l = s.r * 3.2 * (.6 + tw * .6);
+        x.beginPath(); x.moveTo(px - l, py); x.lineTo(px + l, py); x.moveTo(px, py - l); x.lineTo(px, py + l); x.stroke();
+      }
+    }
+    if (dark && !reduce) {                        // estrellas fugaces
+      if (Math.random() < .006 && shoots.length < 2)
+        shoots.push({ x: Math.random() * W * .8 + W * .2, y: Math.random() * H * .4, vx: -(6 + Math.random() * 5), vy: 3 + Math.random() * 3, l: 1 });
+      shoots = shoots.filter(s => s.l > 0);
+      for (const s of shoots) {
+        const g = x.createLinearGradient(s.x, s.y, s.x - s.vx * 9, s.y - s.vy * 9);
+        g.addColorStop(0, `rgba(0,240,255,${s.l})`); g.addColorStop(1, 'rgba(255,92,203,0)');
+        x.strokeStyle = g; x.lineWidth = 1.6; x.lineCap = 'round';
+        x.beginPath(); x.moveTo(s.x, s.y); x.lineTo(s.x - s.vx * 9, s.y - s.vy * 9); x.stroke();
+        s.x += s.vx; s.y += s.vy; s.l -= .012;
+      }
+    }
+    if (!reduce) requestAnimationFrame(frame);
+  }
+
+  addEventListener('resize', resize);
+  addEventListener('themechange', () => { if (reduce) frame(0); });
+  addEventListener('pointermove', e => { tmx = e.clientX / W - .5; tmy = e.clientY / H - .5; }, { passive: true });
+  resize();
+  if (!reduce) requestAnimationFrame(frame);
 })();
