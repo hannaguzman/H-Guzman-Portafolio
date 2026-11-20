@@ -8,7 +8,7 @@
 ------------------------------------------------------------------ */
 const CFG = {
   nombre:'Hanna Guzmán',
-  subtitulo:'QA Tester',
+  subtitulo:'QA Tester & Frontend',
   rosa:[255,133,179],     // #FF85B3: color final del fondo (el rosa del sitio)
   tinta:[43,18,32],       // color del texto sobre el rosa
   espera:.7               // segundos que se queda todo completo antes de entrar al sitio
@@ -318,6 +318,81 @@ boot();
     const s = $('#saltar');
     if (document.getElementById('intro') && !document.body.classList.contains('listo')) s && s.click();
   }, 12000);
+})();
+
+// Carrusel 3D de proyectos + sección de detalle
+(() => {
+  'use strict';
+  const stage = document.getElementById('cfStage'); if (!stage) return;
+  const cards = [...stage.querySelectorAll('.cf-card')];
+  const dots = [...document.querySelectorAll('#cfDots i')];
+  const prev = document.getElementById('cfPrev'), next = document.getElementById('cfNext');
+  const detalle = document.getElementById('detalle');
+  const items = [...detalle.querySelectorAll('.detalle-item')];
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const nombres = ['Ticket Cine', 'Applica', 'Próximo proyecto'];
+  let act = 1, arrastro = false, x0 = null;
+
+  // si una captura no existe todavía, se ve el degradado con el nombre
+  document.querySelectorAll('.cf-img img, .shot img').forEach(im => im.addEventListener('error', () => im.remove()));
+
+  function colocar() {
+    const w = cards[0].offsetWidth;
+    cards.forEach((c, i) => {
+      const o = i - act, a = Math.abs(o), s = Math.sign(o);
+      c.style.transform = o === 0
+        ? 'translate3d(0,0,70px) scale(1.04)'
+        : `translate3d(${o * w * .64}px,0,${-130 * a}px) rotateY(${-s * 50}deg) scale(.92)`;
+      c.style.opacity = a > 2 ? 0 : 1;
+      c.style.zIndex = 10 - a;
+      c.style.filter = o === 0 ? 'none' : 'brightness(.72) saturate(.9)';
+      c.classList.toggle('is-active', o === 0);
+      c.setAttribute('aria-current', o === 0 ? 'true' : 'false');
+      c.setAttribute('aria-label', o === 0 ? (c.dataset.id ? nombres[i] + ', ver detalles' : nombres[i]) : 'Ir a ' + nombres[i]);
+      c.tabIndex = o === 0 ? 0 : -1;
+    });
+    dots.forEach((d, i) => d.classList.toggle('on', i === act));
+    prev.setAttribute('aria-disabled', act === 0);
+    next.setAttribute('aria-disabled', act === cards.length - 1);
+  }
+  const ir = i => { act = Math.max(0, Math.min(cards.length - 1, i)); colocar(); };
+
+  function abrir(id) {
+    items.forEach(it => { it.hidden = it.dataset.id !== id; });
+    detalle.hidden = false;
+    const h = items.find(it => !it.hidden).querySelector('h2');
+    detalle.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+    setTimeout(() => { try { h.focus({ preventScroll: true }); } catch (e) {} }, reduce ? 0 : 600);
+  }
+
+  cards.forEach((c, i) => c.addEventListener('click', () => {
+    if (arrastro) { arrastro = false; return; }
+    if (i !== act) ir(i);
+    else if (c.dataset.id) abrir(c.dataset.id);
+  }));
+  prev.addEventListener('click', () => ir(act - 1));
+  next.addEventListener('click', () => ir(act + 1));
+  document.getElementById('carrusel').addEventListener('keydown', e => {
+    if (e.key === 'ArrowLeft') { ir(act - 1); cards[act].focus(); }
+    if (e.key === 'ArrowRight') { ir(act + 1); cards[act].focus(); }
+  });
+
+  // deslizar con el dedo o el mouse
+  stage.addEventListener('pointerdown', e => { x0 = e.clientX; arrastro = false; });
+  stage.addEventListener('pointerup', e => {
+    if (x0 === null) return;
+    const dx = e.clientX - x0; x0 = null;
+    if (Math.abs(dx) > 45) { arrastro = true; ir(act + (dx < 0 ? 1 : -1)); }
+  });
+  stage.addEventListener('pointercancel', () => { x0 = null; });
+
+  detalle.querySelectorAll('.volver').forEach(b => b.addEventListener('click', () => {
+    document.getElementById('proyectos').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+    setTimeout(() => { detalle.hidden = true; }, reduce ? 0 : 800);
+  }));
+
+  addEventListener('resize', colocar);
+  colocar();
 })();
 
 // Modo claro / oscuro (sol y luna)
