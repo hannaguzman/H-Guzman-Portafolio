@@ -3,17 +3,17 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Hanna Guzmán — QA Tester</title>
-  <meta name="description" content="Hanna Guzmán, QA Tester. Testing manual y automatizado, JavaScript, SQL y metodologías ágiles. Mirá mis proyectos y contactame." />
+  <title>Hanna Guzmán — QA Tester &amp; Desarrolladora Frontend</title>
+  <meta name="description" content="Hanna Guzmán, QA Tester y Desarrolladora Frontend. Testing manual y automatizado, JavaScript, SQL y metodologías ágiles. Mirá mis proyectos y contactame." />
   <meta name="theme-color" content="#FF85B3" />
-  <meta property="og:title" content="Hanna Guzmán — QA Tester" />
+  <meta property="og:title" content="Hanna Guzmán — QA Tester &amp; Desarrolladora Frontend" />
   <meta property="og:description" content="Testing manual y automatizado, JavaScript, SQL y Scrum. Proyectos, formación y contacto." />
   <meta property="og:type" content="website" />
   <script>try{document.documentElement.dataset.theme=localStorage.getItem('hg-theme')==='dark'?'dark':'light'}catch(e){}</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=5">
+  <link rel="stylesheet" href="styles.css?v=6">
   <noscript><style>#intro,#coral{display:none}body.intro-activo{overflow:auto;height:auto}.reveal{opacity:1!important;transform:none!important}</style></noscript>
 </head>
 <body class="intro-activo">
@@ -62,9 +62,9 @@
       <section class="hero" id="inicio" aria-labelledby="titulo">
         <div class="hero-copy">
           <p class="badge reveal"><span class="pulse" aria-hidden="true"></span>Disponible para entrevistas</p>
-          <p class="eyebrow reveal">Hanna Guzmán · QA Tester</p>
-          <h1 id="titulo" class="reveal">Encuentro los errores <span class="hl">antes</span> que tus usuarios.</h1>
-          <p class="lead reveal">Me formé como QA Tester en la UTN. Practico testing manual y automatizado, con JavaScript y SQL, y conozco las metodologías ágiles y Scrum. Además construyo y publico mis propias apps para entender un producto de punta a punta.</p>
+          <p class="eyebrow reveal">Hanna Guzmán · QA Tester &amp; Desarrolladora Frontend</p>
+          <h1 id="titulo" class="reveal">Construyo interfaces y encuentro los errores <span class="hl">antes</span> que tus usuarios.</h1>
+          <p class="lead reveal">Soy QA Tester y Desarrolladora Frontend. Me formé como QA Tester en la UTN y practico testing manual y automatizado, con JavaScript y SQL. También diseño y programo interfaces web, y conozco las metodologías ágiles y Scrum. Construyo y publico mis propias apps para entender un producto de punta a punta.</p>
           <div class="hero-actions reveal">
             <a class="btn btn-primary" href="mailto:hannaguzman611@gmail.com">Hablemos</a>
             <a class="btn btn-ghost" href="#proyectos">Ver proyectos</a>
@@ -82,6 +82,7 @@
               <li style="--d:1">Reporte de bugs</li>
               <li style="--d:2">Pruebas de regresión</li>
               <li style="--d:3">Automatización</li>
+              <li style="--d:4">Interfaces frontend</li>
             </ul>
             <div class="hc-foot"><span class="bar"><i></i></span><b>Listo para producción</b></div>
           </aside>
@@ -92,26 +93,67 @@
       <section class="section" id="proyectos" aria-labelledby="t-proyectos">
         <div class="section-head reveal"><p class="eyebrow">01 — Trabajo</p><h2 id="t-proyectos">Proyectos</h2></div>
 
-        <div class="grid-2">
-          <article class="card project reveal">
-            <div class="project-top"><span class="num">01</span><span class="status done"><i></i>Terminada</span></div>
-            <h3>Tickets de cine</h3>
-            <p>App de reservas de entradas de cine.</p>
-            <div class="project-links">
-              <a class="btn btn-primary" href="https://aplicacion-ticket-cine.vercel.app/" target="_blank" rel="noopener noreferrer">Ver demo<span class="sr"> de Tickets de cine</span></a>
-              <a class="btn btn-ghost" href="https://github.com/hannaguzman/Aplicacion-TicketCine" target="_blank" rel="noopener noreferrer">Ver repo<span class="sr"> de Tickets de cine</span></a>
-            </div>
-          </article>
+        <div class="cf reveal" id="carrusel" role="region" aria-roledescription="carrusel" aria-label="Mis proyectos">
+          <button class="cf-nav prev" id="cfPrev" type="button" aria-label="Proyecto anterior"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
 
-          <article class="card project reveal">
-            <div class="project-top"><span class="num">02</span><span class="status wip"><i></i>En progreso</span></div>
-            <h3>Applica</h3>
-            <p>Organizador de tus postulaciones de trabajo.</p>
-            <div class="project-links">
-              <a class="btn btn-primary" href="https://aplica-one.vercel.app/" target="_blank" rel="noopener noreferrer">Ver demo<span class="sr"> de Applica</span></a>
-            </div>
-          </article>
+          <div class="cf-stage" id="cfStage">
+            <button class="cf-card" type="button" data-id="ticket" aria-label="Ticket Cine">
+              <span class="cf-img"><span class="cf-ph">Ticket Cine</span><img src="img/ticket-cine.png" alt="Portada de Ticket Cine" draggable="false"></span>
+              <span class="cf-cap"><b>Ticket Cine</b><em>Ver detalles →</em></span>
+            </button>
+            <button class="cf-card" type="button" data-id="applica" aria-label="Applica">
+              <span class="cf-img"><span class="cf-ph">Applica</span><img src="img/applica.png" alt="Pantalla de inicio de Applica" draggable="false"></span>
+              <span class="cf-cap"><b>Applica</b><em>Ver detalles →</em></span>
+            </button>
+            <button class="cf-card cf-soon" type="button" data-id="" aria-label="Próximo proyecto">
+              <span class="cf-img"><span class="cf-star" aria-hidden="true"></span><span class="cf-soon-txt">Próximo proyecto</span></span>
+              <span class="cf-cap"><b>Muy pronto</b></span>
+            </button>
+          </div>
+
+          <button class="cf-nav next" id="cfNext" type="button" aria-label="Proyecto siguiente"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+          <div class="cf-dots" id="cfDots" aria-hidden="true"><i></i><i></i><i></i></div>
+          <p class="cf-hint">Deslizá o usá las flechas · tocá el proyecto del centro para ver los detalles</p>
         </div>
+      </section>
+
+      <!-- DETALLE DEL PROYECTO -->
+      <section class="section" id="detalle" aria-label="Detalle del proyecto" hidden>
+        <article class="card detalle-item" data-id="applica" hidden>
+          <div class="shot"><span class="cf-ph">Applica</span><img src="img/applica.png" alt="Pantalla de inicio de Applica"></div>
+          <div class="info">
+            <p class="eyebrow">Detalle del proyecto</p>
+            <h2 tabindex="-1">Applica</h2>
+            <span class="status wip"><i></i>En progreso</span>
+            <p class="desc">Applica es una app que funciona como una agenda para tus postulaciones: llevás un registro de cada una y te preparás para tus entrevistas.</p>
+            <dl class="meta">
+              <div><dt>URL</dt><dd><a href="https://aplica-one.vercel.app/" target="_blank" rel="noopener noreferrer">aplica-one.vercel.app</a></dd></div>
+            </dl>
+            <div class="acciones">
+              <a class="btn btn-primary" href="https://aplica-one.vercel.app/" target="_blank" rel="noopener noreferrer">Ver demo<span class="sr"> de Applica</span></a>
+              <button class="btn btn-ghost volver" type="button">← Volver a proyectos</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="card detalle-item" data-id="ticket" hidden>
+          <div class="shot"><span class="cf-ph">Ticket Cine</span><img src="img/ticket-cine.png" alt="Portada de Ticket Cine"></div>
+          <div class="info">
+            <p class="eyebrow">Detalle del proyecto</p>
+            <h2 tabindex="-1">Ticket Cine</h2>
+            <span class="status done"><i></i>Terminada</span>
+            <p class="desc">Ticket Cine es una app para comprar boletos de cine que ayuda al usuario mostrando y sugiriendo las películas del momento.</p>
+            <dl class="meta">
+              <div><dt>URL</dt><dd><a href="https://aplicacion-ticket-cine.vercel.app/" target="_blank" rel="noopener noreferrer">aplicacion-ticket-cine.vercel.app</a></dd></div>
+              <div><dt>Repositorio</dt><dd><a href="https://github.com/hannaguzman/Aplicacion-TicketCine" target="_blank" rel="noopener noreferrer">github.com/hannaguzman/Aplicacion-TicketCine</a></dd></div>
+            </dl>
+            <div class="acciones">
+              <a class="btn btn-primary" href="https://aplicacion-ticket-cine.vercel.app/" target="_blank" rel="noopener noreferrer">Ver demo<span class="sr"> de Ticket Cine</span></a>
+              <a class="btn btn-ghost" href="https://github.com/hannaguzman/Aplicacion-TicketCine" target="_blank" rel="noopener noreferrer">Ver repo<span class="sr"> de Ticket Cine</span></a>
+              <button class="btn btn-ghost volver" type="button">← Volver a proyectos</button>
+            </div>
+          </div>
+        </article>
       </section>
 
       <!-- CONOCIMIENTOS -->
@@ -129,7 +171,7 @@
           </div>
           <div class="card skill reveal">
             <h3>Técnico</h3>
-            <ul class="chips"><li>JavaScript</li><li>SQL</li></ul>
+            <ul class="chips"><li>JavaScript</li><li>HTML</li><li>CSS</li><li>SQL</li></ul>
           </div>
         </div>
       </section>
@@ -151,7 +193,7 @@
         <div class="contact reveal">
           <p class="eyebrow light">04 — Contacto</p>
           <h2 id="t-contacto">¿Armamos una entrevista?</h2>
-          <p class="contact-lead">Escribime y te respondo a la brevedad. Estoy lista para sumarme a un equipo de QA.</p>
+          <p class="contact-lead">Escribime y te respondo a la brevedad. Estoy lista para sumarme a un equipo de QA o de desarrollo frontend.</p>
 
           <div class="contact-actions">
             <a class="btn btn-light" href="mailto:hannaguzman611@gmail.com">hannaguzman611@gmail.com</a>
@@ -168,7 +210,7 @@
     </main>
 
     <footer class="site-footer">
-      <p>© <span id="year"></span> Hanna Guzmán — QA Tester</p>
+      <p>© <span id="year"></span> Hanna Guzmán — QA Tester &amp; Desarrolladora Frontend</p>
     </footer>
   </div>
 
