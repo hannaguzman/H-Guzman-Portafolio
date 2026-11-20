@@ -1,5 +1,5 @@
-// Entrada animada: una estrella cae en la noche, cambia de azul a amarillo y a rosa,
-// crea una onda suave y revela el nombre; al final el fondo se inunda de rosa y entra al sitio.
+// Entrada animada: una estrella de puntas afiladas cae en la noche, cambia de azul a amarillo y a rosa,
+// crea una onda suave y revela el nombre; el fondo se inunda de rosa y entra al sitio.
 (() => {
 'use strict';
 
@@ -8,22 +8,23 @@
 ------------------------------------------------------------------ */
 const CFG = {
   nombre:'Hanna Guzmán',
-  rosa:[255,133,179],     // #FF85B3: color final del fondo y de la estrella
-  coral:[238,99,70],      // #EE6346: borde de las letras
+  subtitulo:'QA Tester',
+  rosa:[255,133,179],     // #FF85B3: color final del fondo (el rosa del sitio)
+  tinta:[43,18,32],       // color del texto sobre el rosa
   espera:.7               // segundos que se queda todo completo antes de entrar al sitio
 };
 // Colores de la estrella según cuánto bajó (0 = arriba, 1 = al caer): azul → amarillo → rosa
 const COLORES = [
-  [0,   [61,139,255]],    // azul
-  [.12, [61,139,255]],    // se queda azul un momento arriba
-  [.30, [205,232,255]],   // destello celeste claro
-  [.40, [255,249,228]],   // blanco cálido (evita tonos verdosos)
-  [.52, [255,217,61]],    // amarillo
-  [.75, [255,172,120]],   // durazno dorado
+  [0,   [91,157,255]],    // azul
+  [.12, [91,157,255]],    // se queda azul un momento arriba
+  [.30, [214,234,255]],   // destello celeste
+  [.40, [255,248,230]],   // blanco cálido
+  [.52, [255,214,107]],   // amarillo dorado
+  [.76, [255,172,130]],   // durazno
   [1,   [255,133,179]]    // rosa (al tocar)
 ];
 // Tiempos en segundos
-const T = { caida:.3, impacto:1.9, letras:2.25, paso:.06, inundar:3.0, dur:.9 };
+const T = { caida:.3, impacto:1.85, letras:2.2, paso:.065, sub:2.85, inundar:2.95, dur:.95 };
 const END = T.inundar + T.dur;
 
 /* ------------------------------------------------------------------ utilidades */
@@ -32,9 +33,9 @@ const clamp=(x,a=0,b=1)=>Math.min(b,Math.max(a,x));
 const lerp=(a,b,t)=>a+(b-a)*t;
 const smooth=(a,b,x)=>{const t=clamp((x-a)/(b-a));return t*t*(3-2*t)};
 const easeIO=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
-const easeOutBack=t=>{const c=1.7;return 1+(c+1)*Math.pow(t-1,3)+c*Math.pow(t-1,2)};
 const mixRGB=(a,b,t)=>[lerp(a[0],b[0],t),lerp(a[1],b[1],t),lerp(a[2],b[2],t)];
 const rgba=(c,a=1)=>`rgba(${Math.round(c[0])},${Math.round(c[1])},${Math.round(c[2])},${a})`;
+const WHITE=[255,255,255];
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 function colorAt(u){
   for(let i=1;i<COLORES.length;i++){
@@ -48,92 +49,90 @@ function colorAt(u){
 
 /* ------------------------------------------------------------------ cielo de estrellitas (siempre iguales) */
 function rng(seed){return()=>{seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
-const SKY=(()=>{const r=rng(7),a=[];for(let i=0;i<110;i++)a.push({x:r(),y:r(),r:.5+r()*1.3,a:.25+r()*.6,v:.8+r()*2.2,p:r()*6.28});return a})();
-// chispas que salen al impactar
-const CHISPAS=(()=>{const r=rng(21),a=[];for(let i=0;i<18;i++)a.push({ang:i/18*6.283+r()*.3,vel:.8+r()*1.4,r:2+r()*3,c:[[61,139,255],[255,217,61],[255,133,179]][i%3]});return a})();
-
-/* ------------------------------------------------------------------ estrella redondeada */
-function starPath(c,R){
-  const ratio=.52, pts=[];
-  for(let i=0;i<10;i++){const r=i%2?R*ratio:R,a=-Math.PI/2+i*Math.PI/5;pts.push([Math.cos(a)*r,Math.sin(a)*r]);}
-  c.beginPath();
-  for(let i=0;i<10;i++){
-    const p0=pts[(i+9)%10],p1=pts[i],p2=pts[(i+1)%10];
-    const d1=Math.hypot(p0[0]-p1[0],p0[1]-p1[1]),d2=Math.hypot(p2[0]-p1[0],p2[1]-p1[1]);
-    const rr=i%2?R*.16:R*.30, k1=Math.min(rr/d1,.46), k2=Math.min(rr/d2,.46);
-    const a=[p1[0]+(p0[0]-p1[0])*k1,p1[1]+(p0[1]-p1[1])*k1], b=[p1[0]+(p2[0]-p1[0])*k2,p1[1]+(p2[1]-p1[1])*k2];
-    if(i) c.lineTo(a[0],a[1]); else c.moveTo(a[0],a[1]);
-    c.quadraticCurveTo(p1[0],p1[1],b[0],b[1]);
-  }
-  c.closePath();
-}
+const SKY=(()=>{const r=rng(7),a=[];for(let i=0;i<120;i++)a.push({x:r(),y:r(),r:.4+r()*1.1,a:.2+r()*.55,v:.7+r()*2,p:r()*6.28});return a})();
 
 /* ------------------------------------------------------------------ lienzo y medidas */
 const canvas=$('gl'), c=canvas.getContext('2d');
-let L={}, lastT=0;
-function layout(){
-  const vw=innerWidth, vh=innerHeight, dpr=Math.min(devicePixelRatio||1,2);
-  const R=clamp(Math.min(vh*.14,vw*.23),44,124);
-  const f=clamp(Math.min(vw*.098,vh*.105),32,92), gap=f*.5, nameH=f*1.1;
-  const starH=R*1.81, lock=starH+gap+nameH;
-  const top=(vh-lock)/2+vh*.02, yc=top+R, cx=vw/2;
-  const ow=Math.max(4,f*.07);
-  L={vw,vh,dpr,R,f,ow,cx,yc,y0:-R*.95,drift:Math.min(vw*.17,230),
-     floodR:Math.hypot(Math.max(cx,vw-cx),Math.max(yc,vh-yc))+12, maxR:Math.hypot(vw,vh)*.55};
-  canvas.width=Math.round(vw*dpr); canvas.height=Math.round(vh*dpr);
-  const top2=(yc+R*.81+gap)+'px';
-  [nomFondo,nomFrente].forEach(el=>{el.style.top=top2; el.style.fontSize=f+'px';});
-  const ring=[]; for(let i=0;i<16;i++){const a=i/16*Math.PI*2; ring.push(`${(Math.cos(a)*ow).toFixed(2)}px ${(Math.sin(a)*ow).toFixed(2)}px 0 ${rgba(CFG.coral)}`);}
-  nomFondo.style.textShadow=ring.join(',');
-  render(lastT);
-}
-
-/* ------------------------------------------------------------------ nombre (dos capas: borde coral abajo, letras blancas arriba) */
-function buildName(el){
+const nomEl=$('nomFrente'), subEl=$('sub');
+function buildLetters(el,texto){
   const arr=[];
-  for(const ch of CFG.nombre){
+  for(const ch of texto){
     const s=document.createElement('span'); s.className='l'+(ch===' '?' sp':'');
-    s.textContent = ch===' ' ? ' ' : ch; el.appendChild(s); arr.push(s);
+    s.textContent = ch===' ' ? ' ' : ch; el.appendChild(s); arr.push({el:s,sp:ch===' ',cx:0,cy:0});
   }
   return arr;
 }
-const nomFondo=$('nomFondo'), nomFrente=$('nomFrente');
-const LB=buildName(nomFondo), LF=buildName(nomFrente);
+const NOM=buildLetters(nomEl,CFG.nombre), SUB=buildLetters(subEl,CFG.subtitulo);
+let L={}, lastT=0;
+
+function layout(){
+  const vw=innerWidth, vh=innerHeight, dpr=Math.min(devicePixelRatio||1,2);
+  const R=clamp(Math.min(vh*.135,vw*.23),44,118);
+  let f=clamp(Math.min(vw*.062,vh*.066),20,56);
+  const apply=()=>{ nomEl.style.fontSize=f+'px'; subEl.style.fontSize=(f*.36)+'px'; };
+  apply();
+  const first=NOM[0].el, last=NOM[NOM.length-1].el;
+  const ancho=()=>last.offsetLeft+last.offsetWidth-first.offsetLeft;
+  if(ancho()>vw*.86){ f*=vw*.86/ancho(); apply(); }
+  const starH=R*1.81, g1=f*1.0, nameH=f*1.1, g2=f*.38, subH=f*.36*1.1;
+  const top=(vh-(starH+g1+nameH+g2+subH))/2, yc=top+R, cx=vw/2;
+  nomEl.style.top=(top+starH+g1)+'px'; subEl.style.top=(top+starH+g1+nameH+g2)+'px';
+  [...NOM,...SUB].forEach(o=>{ const p=o.el.parentElement;
+    o.cx=o.el.offsetLeft+o.el.offsetWidth/2; o.cy=p.offsetTop+o.el.offsetTop+o.el.offsetHeight/2; });
+  L={vw,vh,dpr,R,f,cx,yc,y0:-R*.95,drift:Math.min(vw*.09,140),
+     floodR:Math.hypot(Math.max(cx,vw-cx),Math.max(yc,vh-yc))+12, maxR:Math.hypot(vw,vh)*.55};
+  canvas.width=Math.round(vw*dpr); canvas.height=Math.round(vh*dpr);
+  render(lastT);
+}
 
 /* ------------------------------------------------------------------ posición de la estrella en la caída */
 function pos(tt){
-  const u=clamp((tt-T.caida)/(T.impacto-T.caida)), e=Math.pow(u,1.7);   // cae acelerando
-  return {u, e, x:L.cx+L.drift*Math.pow(1-u,1.4), y:lerp(L.y0,L.yc,e), sc:lerp(.8,1,e), rot:-(1-u)*Math.PI*1.15};
+  const u=clamp((tt-T.caida)/(T.impacto-T.caida)), e=Math.pow(u,1.7);     // cae acelerando
+  return {u, e, x:L.cx+L.drift*Math.pow(1-u,1.4), y:lerp(L.y0,L.yc,e), sc:lerp(.85,1,e), rot:-(1-u)*Math.PI*.55};
 }
 
-function drawStar(x,y,R,rot,sx,sy,rgb,glow,p){
-  c.save(); c.translate(x,y); c.rotate(rot); c.scale(sx,sy);
+/* ------------------------------------------------------------------ estrella de puntas afiladas, con facetas (efecto gema) */
+const RATIO=.43;
+function drawStar(x,y,R,rot,s,rgb,glow,p){
+  const q=1-p, base=mixRGB(rgb,WHITE,p);
+  const luz=mixRGB(base,WHITE,.5*q), sombra=mixRGB(base,[60,20,40],.18+.14*q);
+  c.save(); c.translate(x,y);
   if(glow>0){                                   // halo luminoso
     c.globalCompositeOperation='lighter';
-    const h=c.createRadialGradient(0,0,R*.2,0,0,R*2.7);
-    h.addColorStop(0,rgba(rgb,.5*glow)); h.addColorStop(1,rgba(rgb,0));
-    c.fillStyle=h; c.beginPath(); c.arc(0,0,R*2.7,0,7); c.fill();
+    const h=c.createRadialGradient(0,0,R*.2,0,0,R*2.6);
+    h.addColorStop(0,rgba(rgb,.42*glow)); h.addColorStop(1,rgba(rgb,0));
+    c.fillStyle=h; c.beginPath(); c.arc(0,0,R*2.6,0,7); c.fill();
     c.globalCompositeOperation='source-over';
   }
-  starPath(c,R);
-  if(p>0){ c.lineJoin='round'; c.lineWidth=2*L.ow; c.strokeStyle=rgba(CFG.coral,p); c.stroke(); }
-  const base=mixRGB(rgb,[255,255,255],p), q=1-p;
-  const gr=c.createLinearGradient(-R*.7,-R*.9,R*.7,R*.9);
-  gr.addColorStop(0,rgba(mixRGB(base,[255,255,255],.5*q)));
-  gr.addColorStop(.5,rgba(base));
-  gr.addColorStop(1,rgba(mixRGB(base,[0,0,0],.26*q)));
-  if(glow>0){ c.shadowColor=rgba(rgb,.9*glow); c.shadowBlur=R*.8*L.dpr; }
-  c.fillStyle=gr; c.fill();
-  c.shadowBlur=0; c.shadowColor='transparent';
-  if(q>0){                                      // brillo suave arriba a la izquierda
-    const hl=c.createRadialGradient(-R*.3,-R*.35,0,-R*.3,-R*.35,R*.95);
-    hl.addColorStop(0,`rgba(255,255,255,${.55*q})`); hl.addColorStop(1,'rgba(255,255,255,0)');
-    c.fillStyle=hl; c.fill();
+  c.rotate(rot); c.scale(s,s);
+  const P=[]; for(let i=0;i<10;i++){const r=i%2?R*RATIO:R,a=-Math.PI/2+i*Math.PI/5;P.push([Math.cos(a)*r,Math.sin(a)*r]);}
+  c.beginPath(); P.forEach((pt,i)=>i?c.lineTo(pt[0],pt[1]):c.moveTo(pt[0],pt[1])); c.closePath();
+  if(glow>0){ c.shadowColor=rgba(rgb,.85*glow); c.shadowBlur=R*.6*L.dpr; }
+  c.fillStyle=rgba(base); c.fill(); c.shadowBlur=0; c.shadowColor='transparent';
+  // 10 facetas triangulares: cada una con su luz (luz desde arriba a la izquierda)
+  c.lineJoin='round'; c.lineWidth=.7;
+  for(let i=0;i<10;i+=2){
+    const tip=P[i], a=P[(i+9)%10], b=P[(i+1)%10];
+    [a,b].forEach(v=>{
+      const mx=(tip[0]+v[0])/3, my=(tip[1]+v[1])/3, m=Math.hypot(mx,my)||1;
+      const sh=.5+.5*((mx/m)*-.55+(my/m)*-.83);
+      const col=rgba(mixRGB(sombra,luz,clamp(sh*1.15)));
+      c.fillStyle=col; c.strokeStyle=col;
+      c.beginPath(); c.moveTo(0,0); c.lineTo(tip[0],tip[1]); c.lineTo(v[0],v[1]); c.closePath(); c.fill(); c.stroke();
+    });
   }
   c.restore();
+  if(glow>0){                                   // destello fino en cruz
+    c.save(); c.translate(x,y); c.globalCompositeOperation='lighter';
+    const fa=.3*Math.min(glow,1.3), sz=R*2.5*s;
+    c.save(); c.scale(1,.035); let g=c.createRadialGradient(0,0,0,0,0,sz); g.addColorStop(0,`rgba(255,255,255,${fa})`); g.addColorStop(1,'rgba(255,255,255,0)'); c.fillStyle=g; c.beginPath(); c.arc(0,0,sz,0,7); c.fill(); c.restore();
+    c.save(); c.scale(.035,1); g=c.createRadialGradient(0,0,0,0,0,sz*.75); g.addColorStop(0,`rgba(255,255,255,${fa*.8})`); g.addColorStop(1,'rgba(255,255,255,0)'); c.fillStyle=g; c.beginPath(); c.arc(0,0,sz*.75,0,7); c.fill(); c.restore();
+    c.restore();
+  }
 }
 
 /* ------------------------------------------------------------------ dibujo de cada cuadro */
+const intro=$('intro'), coral=$('coral'), sitio=$('sitio');
 function render(t){
   lastT=t;
   const {vw,vh,dpr,R,cx,yc}=L;
@@ -141,7 +140,7 @@ function render(t){
 
   // noche
   const g=c.createRadialGradient(vw/2,vh*.4,0,vw/2,vh*.4,Math.max(vw,vh)*.8);
-  g.addColorStop(0,'#13112b'); g.addColorStop(1,'#04030a');
+  g.addColorStop(0,'#12102a'); g.addColorStop(1,'#04030a');
   c.fillStyle=g; c.fillRect(0,0,vw,vh);
   const fin=smooth(0,.7,t);
   c.fillStyle='#fff';
@@ -153,73 +152,81 @@ function render(t){
 
   const hv=t-T.impacto;                          // tiempo desde el impacto
 
-  // destello y ondas suaves
+  // destello suave y ondas finas
   if(hv>0){
-    const fv=clamp(hv/.9), fe=1-Math.pow(1-fv,3);
+    const fv=clamp(hv/1.1), fe=1-Math.pow(1-fv,3);
     if(fv<1){
       c.globalCompositeOperation='lighter';
-      const rr=lerp(R,R*6,fe), gg=c.createRadialGradient(cx,yc,0,cx,yc,rr);
-      gg.addColorStop(0,rgba(CFG.rosa,.5*(1-fv))); gg.addColorStop(1,rgba(CFG.rosa,0));
+      const rr=lerp(R,R*5.5,fe), gg=c.createRadialGradient(cx,yc,0,cx,yc,rr);
+      gg.addColorStop(0,rgba(CFG.rosa,.34*(1-fv))); gg.addColorStop(1,rgba(CFG.rosa,0));
       c.fillStyle=gg; c.beginPath(); c.arc(cx,yc,rr,0,7); c.fill();
       c.globalCompositeOperation='source-over';
     }
     for(let i=0;i<3;i++){
-      const v=(t-(T.impacto+i*.2))/1.6;
+      const v=(t-(T.impacto+i*.22))/1.7;
       if(v<=0||v>=1) continue;
-      const e=1-Math.pow(1-v,3), r=lerp(R*.7,L.maxR,e), a=Math.pow(1-v,1.5)*.8;
+      const e=1-Math.pow(1-v,3), r=lerp(R*.8,L.maxR,e), a=Math.pow(1-v,1.6);
       c.beginPath(); c.arc(cx,yc,r,0,7);
-      c.lineWidth=lerp(5,1.2,v); c.strokeStyle=rgba(CFG.rosa,a);
-      c.shadowColor=rgba(CFG.rosa,a); c.shadowBlur=16*dpr; c.stroke(); c.shadowBlur=0;
-    }
-    // chispas de colores
-    for(const s of CHISPAS){
-      const v=clamp(hv/1.0); if(v>=1) break;
-      const d=(1-Math.pow(1-v,3))*s.vel*R*1.9;
-      c.fillStyle=rgba(s.c,(1-v)*.9);
-      c.beginPath(); c.arc(cx+Math.cos(s.ang)*d,yc+Math.sin(s.ang)*d,s.r*(1-v*.6),0,7); c.fill();
+      c.lineWidth=lerp(14,6,v); c.strokeStyle=rgba(CFG.rosa,a*.05); c.stroke();          // halo difuso
+      c.lineWidth=lerp(1.6,.7,v); c.strokeStyle=rgba(mixRGB(CFG.rosa,WHITE,.35),a*.6); c.stroke();   // línea fina
     }
   }
 
   // inundación rosa desde el punto de impacto
-  const fl=clamp((t-T.inundar)/T.dur);
-  if(fl>=1){ c.fillStyle=rgba(CFG.rosa); c.fillRect(0,0,vw,vh); }
-  else if(fl>0){ c.fillStyle=rgba(CFG.rosa); c.beginPath(); c.arc(cx,yc,easeIO(fl)*L.floodR,0,7); c.fill(); }
+  const fl=clamp((t-T.inundar)/T.dur), rr=fl>=1?1e5:easeIO(fl)*L.floodR;
+  if(fl>0){
+    c.fillStyle=rgba(CFG.rosa); c.beginPath();
+    if(fl>=1) c.rect(0,0,vw,vh); else c.arc(cx,yc,rr,0,7);
+    c.fill();
+    const vg=c.createRadialGradient(cx,yc,0,cx,yc,Math.max(vw,vh)*.75);   // luz suave al centro
+    vg.addColorStop(0,`rgba(255,255,255,${.2*easeIO(fl)})`); vg.addColorStop(1,'rgba(255,255,255,0)');
+    c.fillStyle=vg; c.fill();
+  }
+  intro.classList.toggle('sobre-rosa', fl>.55);
 
-  // estela (partículas que quedan detrás de la estrella)
-  const trailOn=1-smooth(T.impacto,T.impacto+.15,t);
+  // estela fina detrás de la estrella
+  const trailOn=1-smooth(T.impacto,T.impacto+.12,t);
   if(trailOn>0 && t>T.caida){
-    c.globalCompositeOperation='lighter';
-    for(let k=1;k<=16;k++){
-      const tt=t-k*.024; if(tt<T.caida) break;
-      const ps=pos(tt), col=colorAt(ps.e), f=1-k/17, side=((k*37)%11-5)/5;
-      c.fillStyle=rgba(col,Math.pow(f,1.4)*.7*trailOn);
-      c.beginPath(); c.arc(ps.x+side*R*.3*(1-f*.4),ps.y-R*.12-k*R*.045,R*.085*f+.8,0,7); c.fill();
-      if(k%2){ c.fillStyle=rgba(mixRGB(col,[255,255,255],.6),Math.pow(f,2)*.6*trailOn);
-        c.beginPath(); c.arc(ps.x-side*R*.5,ps.y-R*.35-k*R*.07,1+f*1.4,0,7); c.fill(); }
+    c.globalCompositeOperation='lighter'; c.lineCap='round';
+    let prev=pos(t);
+    for(let k=1;k<=22;k++){
+      const tt=t-k*.022; if(tt<T.caida) break;
+      const ps=pos(tt), f=1-k/23, col=colorAt(ps.e);
+      c.beginPath(); c.moveTo(prev.x,prev.y-R*.05); c.lineTo(ps.x,ps.y-R*.05);
+      c.lineWidth=R*.2*f; c.strokeStyle=rgba(col,Math.pow(f,1.7)*.42*trailOn); c.stroke();
+      c.lineWidth=Math.max(.6,R*.05*f); c.strokeStyle=rgba(mixRGB(col,WHITE,.7),Math.pow(f,1.3)*.8*trailOn); c.stroke();
+      prev=ps;
     }
     c.globalCompositeOperation='source-over';
   }
 
   // la estrella
   const ps=pos(t), col=colorAt(ps.e);
-  let sx=1,sy=1;
-  if(hv>0 && hv<.55){ const w=hv/.55, sq=Math.sin(Math.PI*w)*(1-w*.4); sx=1+.2*sq; sy=1-.24*sq; }
-  const p=smooth(T.inundar+.15,T.inundar+.75,t);   // se vuelve blanca con borde coral al inundarse
-  const glow=(1-p)*(hv>0?1+.9*Math.max(0,1-hv/.6):1);
-  drawStar(ps.x,ps.y,R*ps.sc,hv>0?0:ps.rot,sx,sy,col,glow,p);
+  const pulso=(hv>0&&hv<.5)?1+.06*Math.sin(Math.PI*hv/.5):1;
+  const p=smooth(T.inundar+.2,T.inundar+.8,t);           // al inundarse se vuelve blanca
+  const glow=(1-p)*(1+(hv>0?.8*Math.max(0,1-hv/.7):0));
+  drawStar(ps.x,ps.y,R,ps.rot,ps.sc*pulso,col,glow,p);
 
-  // letras del nombre
-  let n=0;
-  for(let i=0;i<LF.length;i++){
-    if(LF[i].classList.contains('sp')) continue;
-    const u=clamp((t-(T.letras+n*T.paso))/.5); n++;
-    const e=easeOutBack(u), tr=`translateY(${((1-e)*L.f*.4).toFixed(2)}px) scale(${(.4+.6*e).toFixed(3)})`, op=clamp(u*2.5).toFixed(3);
-    [LF[i],LB[i]].forEach(s=>{s.style.opacity=op; s.style.transform=tr;});
-  }
+  // letras (blancas sobre la noche; se vuelven oscuras cuando el rosa las alcanza)
+  const writ=(arr,t0,paso,alfa)=>{
+    let n=0;
+    arr.forEach(o=>{
+      if(o.sp) return;
+      const u=clamp((t-(t0+n*paso))/.75); n++;
+      const e=1-Math.pow(1-u,3);
+      const d=Math.hypot(o.cx-cx,o.cy-yc), k=fl>0?smooth(0,1,(rr-(d-30))/60):0;
+      const s=o.el.style, cc=mixRGB(WHITE,CFG.tinta,k);
+      s.opacity=(e*alfa).toFixed(3);
+      s.transform=`translateY(${((1-e)*L.f*.35).toFixed(2)}px)`;
+      s.filter=u<1?`blur(${((1-e)*7).toFixed(1)}px)`:'none';
+      s.color=rgba(cc);
+    });
+  };
+  writ(NOM,T.letras,T.paso,1);
+  writ(SUB,T.sub,.045,.85);
 }
 
 /* ------------------------------------------------------------------ salida hacia el sitio */
-const intro=$('intro'), coral=$('coral'), sitio=$('sitio');
 let done=false, raf=0, hold=0;
 function entrar(){
   if(done) return; done=true; cancelAnimationFrame(raf); clearTimeout(hold);
@@ -246,7 +253,7 @@ function play(){
   raf=requestAnimationFrame(loop);
 }
 async function boot(){
-  try{ await Promise.race([document.fonts.load('800 100px Outfit'), new Promise(r=>setTimeout(r,1200))]); }catch(e){}
+  try{ await Promise.race([Promise.all([document.fonts.load('300 40px Outfit'),document.fonts.load('400 20px Outfit')]), new Promise(r=>setTimeout(r,1200))]); }catch(e){}
   let visto=false;                               // no repetir en la misma pestaña (usar ?intro para verla de nuevo)
   try{ visto=sessionStorage.getItem('hg-intro')==='1' && !/[?&]intro/.test(location.search); }catch(e){}
   if(visto && !window.__introManual){
