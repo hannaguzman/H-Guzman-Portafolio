@@ -66,7 +66,7 @@ const NOM=buildLetters(nomEl,CFG.nombre), SUB=buildLetters(subEl,CFG.subtitulo);
 let L={}, lastT=0;
 
 function layout(){
-  const vw=innerWidth, vh=innerHeight, dpr=Math.min(devicePixelRatio||1,2);
+  const vw=document.documentElement.clientWidth||innerWidth, vh=innerHeight, dpr=Math.min(devicePixelRatio||1,2);
   const R=clamp(Math.min(vh*.135,vw*.23),44,118);
   let f=clamp(Math.min(vw*.062,vh*.066),20,56);
   const apply=()=>{ nomEl.style.fontSize=f+'px'; subEl.style.fontSize=(f*.36)+'px'; };
